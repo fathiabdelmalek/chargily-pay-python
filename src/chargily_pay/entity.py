@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, List
 
 
 @dataclass
@@ -15,15 +15,15 @@ class Customer:
     email: str
     phone: Optional[str] = None
     address: Address = None
-    metadata: list = field(default_factory=list)
+    metadata: List = field(default_factory=list)
 
 
 @dataclass
 class Product:
     name: str
     description: Optional[str] = None
-    images: list[str] = None
-    metadata: list[dict] = field(default_factory=list)
+    images: List[str] = None
+    metadata: List[dict] = field(default_factory=list)
 
 
 @dataclass
@@ -31,7 +31,7 @@ class Price:
     amount: int
     currency: str
     product_id: str
-    metadata: list[dict] = field(default_factory=list)
+    metadata: List[dict] = field(default_factory=list)
 
 
 @dataclass
@@ -53,7 +53,7 @@ class Checkout:
     payment_method: str = None
     webhook_endpoint: str = None
     pass_fees_to_customer: bool = None
-    metadata: list[dict] = field(default_factory=list)
+    metadata: List[dict] = field(default_factory=list)
 
     def __post_init__(self):
         if not self.items and not self.amount:
@@ -76,8 +76,8 @@ class PaymentItem:
 @dataclass
 class PaymentLink:
     name: str
-    items: list[PaymentItem]
+    items: List[PaymentItem]
     after_completion_message: str = None
     locale: str = None
     pass_fees_to_customer: bool = None
-    metadata: list[dict] = None
+    metadata: List[dict] = None

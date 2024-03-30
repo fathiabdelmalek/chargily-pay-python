@@ -1,6 +1,7 @@
 import hmac
 import hashlib
 from dataclasses import asdict
+from typing import List
 
 import requests
 from requests.compat import urljoin
@@ -188,7 +189,7 @@ class ChargilyClient:
         return response
 
     @response_or_exception
-    def update_price(self, id, metadata: list[dict]):
+    def update_price(self, id, metadata: List[dict]):
         """Update a price"""
 
         response = requests.post(

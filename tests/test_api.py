@@ -467,13 +467,11 @@ class TestChargilyClient(unittest.TestCase):
         response = self.chargily.create_payment_link(payment_link)
         payment_link_id = response["id"]
         self.assertEqual(response["name"], "Payment link name")
-        try:
-            payment_link.name = "Payment link name 2"
-            response = self.chargily.update_payment_link(payment_link_id, payment_link)
-            self.assertEqual(response["name"], "Payment link name 2")
-            raise Exception("Should fail")
-        except requests.exceptions.HTTPError as err:
-            self.assertEqual(err.response.status_code, 422)
+
+        payment_link.name = "Payment link name 2"
+        response = self.chargily.update_payment_link(payment_link_id, payment_link)
+        self.assertEqual(response["name"], "Payment link name 2")
+
 
     def test_retrieve_payment_link(self):
         product = Product(
