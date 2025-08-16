@@ -16,7 +16,7 @@ pip install chargily-pay
 ## Usage
 ```python
 from chargily_pay import ChargilyClient
-from chargily_pay.settings import CHARGILIY_TEST_URL
+from chargily_pay.settings import CHARGILY_TEST_URL
 
 
 # ==============
@@ -25,7 +25,7 @@ from chargily_pay.settings import CHARGILIY_TEST_URL
 key = "YOUR_KEY"
 secret = "YOUR_SECRET"
 
-chargily = ChargilyClient(key, secret, CHARGILIY_TEST_URL)
+chargily = ChargilyClient(key, secret, CHARGILY_TEST_URL)
 
 # ==============
 # Get Balance

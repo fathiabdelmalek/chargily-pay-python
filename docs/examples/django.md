@@ -33,7 +33,7 @@ In your `models.py`, you have a model named AmountCheckout. This model represent
 
 ```py
 # models.py
-class AmountCheckout(models.Model, mixins.AbstractCheckout):
+class AmountCheckout(models.Model):
     class PAYMENT_STATUS(models.TextChoices):
         PENDING = "PENDING", "Pending"
         PAID = "PAID", "Paid"
@@ -85,6 +85,7 @@ class AmountCheckout(models.Model, mixins.AbstractCheckout):
         self.save()
 
     def to_entity(self) -> Checkout:
+        entity = {}
         entity["amount"] = self.amount
         entity["currency"] = "dzd"
         entity["success_url"] = "success_url"
@@ -106,7 +107,7 @@ In your services.py, a service function named create_checkout is defined. It use
 
 from chargily_pay import ChargilyClient
 
-from apps.chargily_pay_django import models
+from . import models
 
 client: ChargilyClient = ChargilyClient(
     secret=settings.CHARGILY_SECRET,
@@ -122,7 +123,7 @@ def create_checkout(checkout: models.Checkout) -> models.Checkout:
         checkout.save()
         return checkout
     except Exception as e:
-        checkout.status = models.AbstractCheckout.PAYMENT_STATUS.FAILED
+        checkout.status = models.AmountCheckout.PAYMENT_STATUS.FAILED
         checkout.save()
         raise
 ```
@@ -133,14 +134,13 @@ In your views.py, a class-based view named WebhookView is implemented to handle 
 
 ```py
 # views.py
-
 import json
 
 from django.views import View
 from django.http import HttpResponse, JsonResponse, HttpRequest
 
-from apps.chargily_pay_django.models import AbstractCheckout
-from apps.chargily_pay_django.services import client
+from .models import AmountCheckout
+from .services import client
 
 
 class WebhookView(View):
@@ -174,8 +174,6 @@ class WebhookView(View):
             return HttpResponse(status=400)
 
         return JsonResponse({}, status=200)
-
-
 ```
 
 ### 6. Configure URLs
@@ -183,9 +181,10 @@ In your urls.py, a URL pattern is set up to route webhook requests to the Webhoo
 
 ```py
 # urls.py
-
 from django.urls import path
-from apps.chargily_pay_django.views import WebhookView
+
+from .views import WebhookView
+
 
 urlpatterns = [
     path("webhook/", WebhookView.as_view(), name="webhook"),
